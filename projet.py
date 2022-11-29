@@ -24,6 +24,13 @@ def get_options() -> argparse.Namespace:
         action="store",
         help='The output file .'
     )
+    
+    parser.add_argument(
+        "-o2",
+        required=True,
+        action="store",
+        help='The output file for gc_percent.'
+    )
 
     return parser.parse_args()
 
@@ -83,5 +90,5 @@ def write_file_gc(input_file, output_name):
         
 if __name__ == '__main__':
     options = get_options()
-    write_file(options.i, options.o)
-    write_file_gc(options.i, options.o)
+    write_file(options.i, options.o1)
+    write_file_gc(options.i, options.o2)
