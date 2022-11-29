@@ -1,6 +1,32 @@
-import gzip
+import argparse
 
 file_1 = "C:/Users/leabe/OneDrive/Bureau/ALG/Ecoli_100Kb/ecoli_100Kb_reads_5x.fasta"
+
+def get_options() -> argparse.Namespace:
+    """Give the options you want.
+
+
+    Returns:
+        Namespace: The parsed arguments.
+    """
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-i",
+        required=True,
+        action="store",
+        help='The fasta file.'
+    )
+
+    parser.add_argument(
+        "-o",
+        required=True,
+        action="store",
+        help='The output file .'
+    )
+
+    return parser.parse_args()
+
 
 def triplet(file):
     words = ["AAA", "AAC", "AAG", "AAT", "ACA", "AGA", "ATA", "ACC", "ACG", "ACT", "AGC", "AGG", "AGT", "ATC", "ATG", "ATT"]
@@ -21,6 +47,23 @@ def triplet(file):
                         i+=1
     return dict_triplet
 
+def gc_percent(file):
+    dict_gc = {}
+    with open(file, "r") as fh:
+        for line in fh:
+            if ">" not in line:
+                gc = 0
+                for letter in line : 
+                    if letter == "G" or letter == "C" :
+                        gc += 1
+                gc = gc / len(line[:-1])
+                if str(gc) not in dict_gc :
+                    dict_gc[str(gc)] = [line]
+                else :
+                     dict_gc[str(gc)].append(line)
+    return dict_gc
+
+
 def write_file(input_file, output_name):
     with open (output_name,"w") as out :
         dico_read = triplet(input_file)
@@ -29,3 +72,7 @@ def write_file(input_file, output_name):
             for j in i:
                 out.write(j)
                 out.write("\n")
+        
+if __name__ == '__main__':
+    options = get_options()
+    write_file(options.i, options.o)
