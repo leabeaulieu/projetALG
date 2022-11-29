@@ -31,6 +31,13 @@ def get_options() -> argparse.Namespace:
         action="store",
         help='The output file for gc_percent.'
     )
+    
+    parser.add_argument(
+        "-o3",
+        required=True,
+        action="store",
+        help='The output file for alphabetically.'
+    )
 
     return parser.parse_args()
 
@@ -70,6 +77,15 @@ def gc_percent(file):
                      dict_gc[str(gc)].append(line)
     return dict_gc
 
+def sort_reads(file):
+    reads = []
+    with open(file, "r") as fh:
+        for line in fh:
+            if ">" not in line:
+                reads.append(line)
+    sorted_reads = sorted(reads)
+    return sorted_reads
+
 
 def write_file(input_file, output_name):
     with open (output_name,"w") as out :
@@ -87,8 +103,15 @@ def write_file_gc(input_file, output_name):
         for i in sorted_dict.values():
             for j in i:
                 out.write(j)
-        
+                
+def write_file_alphabetically(input_file, output_name):
+    with open (output_name,"w") as out :
+        sorted_reads = sort_reads(input_file)
+        for i in sorted_reads :
+            out.write(i)
+            
 if __name__ == '__main__':
     options = get_options()
     write_file(options.i, options.o1)
     write_file_gc(options.i, options.o2)
+    write_file_alphabetically(options.i, options.o3)
