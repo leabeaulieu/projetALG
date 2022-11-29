@@ -72,7 +72,16 @@ def write_file(input_file, output_name):
             for j in i:
                 out.write(j)
                 out.write("\n")
+                
+def write_file_gc(input_file, output_name):
+    with open (output_name,"w") as out :
+        dico_gc = gc_percent(input_file)
+        sorted_dict = dict(sorted(dico_gc.items()))
+        for i in sorted_dict.values():
+            for j in i:
+                out.write(j)
         
 if __name__ == '__main__':
     options = get_options()
     write_file(options.i, options.o)
+    write_file_gc(options.i, options.o)
