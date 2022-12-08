@@ -1,14 +1,15 @@
+import gzip
 import argparse
 
-file_1 = "C:/Users/leabe/OneDrive/Bureau/ALG/Ecoli_100Kb/ecoli_100Kb_reads_5x.fasta"
-
+file_1 = "/home/lea/Documents/ALG/Ecoli_100Kb/ecoli_100Kb_reads_40x.fasta"
+'''
 def get_options() -> argparse.Namespace:
-    '''
+    
     Give the options you want.
 
     Returns:
         Namespace: The parsed arguments.
-    '''
+    
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -41,7 +42,7 @@ def get_options() -> argparse.Namespace:
 
 
     return parser.parse_args()
-'''
+
 def remove_header(input_file, output_file):
     with open(input_file, "r") as ifh:
         with open(output_file, "w") as ofh:
@@ -49,7 +50,9 @@ def remove_header(input_file, output_file):
                 if ">" not in line:
                     ofh.write(line)'''
 
-def triplet(file):
+
+import itertools 
+def triplet(file, min):
     '''
     Take all triplets starting with 'A' in order to sort the reads.
 
@@ -57,23 +60,48 @@ def triplet(file):
         file : a fasta file
     Returns:
         dict_triplet : a dictionnary that contains triplets in keys and reads in values.
-    '''
-    words = ["AAA", "AAC", "AAG", "AAT", "ACA", "AGA", "ATA", "ACC", "ACG", "ACT", "AGC", "AGG", "AGT", "ATC", "ATG", "ATT"]
+    '''    
+    kmer = []
+    nucleotides = ["A","T","C","G"]
+    for i in itertools.product(nucleotides,repeat = min) :
+        kmer.append(i)
+
+    list_of_kmer = []
+    for i in kmer : 
+        word = ""
+        for j in i :
+            word+=j
+        list_of_kmer.append(word)
+    
+    list_of_kmer = sorted(list_of_kmer)
+    #words = ["AAA", "AAC", "AAG", "AAT", "ACA", "AGA", "ATA", "ACC", "ACG", "ACT", "AGC", "AGG", "AGT", "ATC", "ATG", "ATT"]
     dict_triplet = dict()
     with open(file, "r") as file_reader:
         for line in file_reader:
             line = line.strip("\n")
             if ">" not in line:
                 i = 0
-                while i != len(words)-1:
-                    if words[i] in line :
-                        if words[i] not in dict_triplet :
-                            dict_triplet[words[i]] = [line]
+                while i != len(list_of_kmer)-1:
+                    if list_of_kmer[i] in line :
+                        if list_of_kmer[i] not in dict_triplet :
+                            dict_triplet[list_of_kmer[i]] = [line]
                         else :
-                            dict_triplet[words[i]].append(line)
-                        i = len(words)-1
+                            dict_triplet[list_of_kmer[i]].append(line)
+                        i = len(list_of_kmer)-1
                     else:
                         i += 1
+    return dict_triplet
+
+def kmer(file,min):
+    dict_triplet = dict()
+    with open(file, "r") as file_reader:
+        for line in file_reader:
+            line = line.strip("\n")
+            word = ""
+            if ">" not in line:
+                word = line[:6]
+                i = 0
+                while i != len(line)-min:
     return dict_triplet
 
 def gc_percent(file):
@@ -119,7 +147,7 @@ def sort_reads(file):
     return sorted_reads
 
 
-def write_file_tri(input_file, output_name):
+def write_file_tri(input_file, output_name, min):
     '''
     Write the file that will contains sorted reads by triplets.
 
@@ -128,7 +156,7 @@ def write_file_tri(input_file, output_name):
         output_file : a text file
     '''
     with open (output_name,"w") as out :
-        dico_read = triplet(input_file)
+        dico_read = triplet(input_file, min)
         sorted_dict = {key: value for key, value in sorted(dico_read.items())}
         for i in sorted_dict.values():
             for j in i:
@@ -162,9 +190,19 @@ def write_file_alphabetically(input_file, output_name):
         sorted_reads = sort_reads(input_file)
         for i in sorted_reads :
             out.write(i)
-            
-if __name__ == '__main__':
+ 
+'''if __name__ == '__main__':
     options = get_options()
-    write_file(options.i, options.o1)
+    write_file_tri(options.i, options.o1, min)
     write_file_gc(options.i, options.o2)
     write_file_alphabetically(options.i, options.o3)
+'''
+    
+ 
+write_file_tri(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_tri.txt", 8)
+#print(triplet(file_1))
+write_file_gc(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_gc.txt")
+write_file_alphabetically(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_al.txt")
+
+
+
