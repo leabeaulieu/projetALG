@@ -11,15 +11,19 @@ This project is dedicated to reorganize the reads from sequencing so that a gene
 
 ## LAUCH
 
-`python read_organizer.py -i myreads.fa -o1 myreads_organized_tri.txt -o1 myreads_organized_gc.txt -o3 myreads_organized_al.txt`
+`python read_organizer.py -i myreads.fa -o myreads_organized.txt -f "kmer" -min 7`
 
 
 ```
-positional arguments:
-  -i                    name of the input fasta file 
-  -o1                   name of the first output file
-  -o2                   name of the second output file
-  -o3                   name of the third output file
+Positional arguments:
+  -i                    Name of the input fasta file 
+  -o                    Name of the output file
+  
+Optional arguments :
+  -f                    Method/function used to generate the output file : "minimizer", "gc" or "alphabet".
+                        By default, function "minimizer" is called.
+  -min                  Length of smallest lexicographic word wanted for each read if method "minimizer" is used.
+                        By default, min = 7.
 
 ```
 
