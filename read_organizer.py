@@ -170,7 +170,7 @@ def write_file_alphabetically(input_file, output_name):
  
 '''if __name__ == '__main__':
     options = get_options()
-    write_file_tri(options.i, options.o1, min)
+    write_file_kmer(options.i, options.o1, min)
     write_file_gc(options.i, options.o2)
     write_file_alphabetically(options.i, options.o3)
 '''
