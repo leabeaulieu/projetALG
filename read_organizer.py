@@ -23,7 +23,7 @@ def get_options() -> argparse.Namespace:
         "-o1",
         required=True,
         action="store",
-        help='The output file for triplet.'
+        help='The output file for kmer.'
     )
 
     parser.add_argument(
@@ -51,58 +51,35 @@ def remove_header(input_file, output_file):
                     ofh.write(line)'''
 
 
-import itertools 
-def triplet(file, min):
+def kmer(file,min):
     '''
-    Take all triplets starting with 'A' in order to sort the reads.
-
+    Finds the smallest lexicographic word of length "min" for each read.
     Args:
         file : a fasta file
+        min : length of word
     Returns:
-        dict_triplet : a dictionnary that contains triplets in keys and reads in values.
+        dict_kmer : a dictionnary that contains smallest lexicographic words of length "min" as keys
+                    and a list of reads associated as values.
     '''    
-    kmer = []
-    nucleotides = ["A","T","C","G"]
-    for i in itertools.product(nucleotides,repeat = min) :
-        kmer.append(i)
-
-    list_of_kmer = []
-    for i in kmer : 
-        word = ""
-        for j in i :
-            word+=j
-        list_of_kmer.append(word)
-    
-    list_of_kmer = sorted(list_of_kmer)
-    #words = ["AAA", "AAC", "AAG", "AAT", "ACA", "AGA", "ATA", "ACC", "ACG", "ACT", "AGC", "AGG", "AGT", "ATC", "ATG", "ATT"]
-    dict_triplet = dict()
+    dict_kmer = dict()
     with open(file, "r") as file_reader:
         for line in file_reader:
             line = line.strip("\n")
+            smallest_word = ""
             if ">" not in line:
-                i = 0
-                while i != len(list_of_kmer)-1:
-                    if list_of_kmer[i] in line :
-                        if list_of_kmer[i] not in dict_triplet :
-                            dict_triplet[list_of_kmer[i]] = [line]
-                        else :
-                            dict_triplet[list_of_kmer[i]].append(line)
-                        i = len(list_of_kmer)-1
-                    else:
-                        i += 1
-    return dict_triplet
-
-def kmer(file,min):
-    dict_triplet = dict()
-    with open(file, "r") as file_reader:
-        for line in file_reader:
-            line = line.strip("\n")
-            word = ""
-            if ">" not in line:
-                word = line[:6]
-                i = 0
-                while i != len(line)-min:
-    return dict_triplet
+                smallest_word = line[:min]
+                word = ""
+                i = 1
+                while i != len(line)-min+1:
+                    word = line[i:i+min]
+                    if word < smallest_word :
+                        smallest_word = word
+                    i+=1
+                if smallest_word not in dict_kmer :
+                    dict_kmer[smallest_word] = [line]
+                else :
+                    dict_kmer[smallest_word].append(line)
+    return dict_kmer
 
 def gc_percent(file):
     '''
@@ -147,16 +124,16 @@ def sort_reads(file):
     return sorted_reads
 
 
-def write_file_tri(input_file, output_name, min):
+def write_file_kmer(input_file, output_name, min):
     '''
-    Write the file that will contains sorted reads by triplets.
+    Write the file that will contains sorted reads by kmers.
 
     Args:
         input_file : a fasta file
         output_file : a text file
     '''
     with open (output_name,"w") as out :
-        dico_read = triplet(input_file, min)
+        dico_read = kmer(input_file, min)
         sorted_dict = {key: value for key, value in sorted(dico_read.items())}
         for i in sorted_dict.values():
             for j in i:
@@ -199,8 +176,8 @@ def write_file_alphabetically(input_file, output_name):
 '''
     
  
-write_file_tri(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_tri.txt", 8)
-#print(triplet(file_1))
+write_file_kmer(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_tri.txt", 8)
+#print(kmer(file_1))
 write_file_gc(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_gc.txt")
 write_file_alphabetically(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_al.txt")
 
