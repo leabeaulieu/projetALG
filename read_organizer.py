@@ -1,8 +1,7 @@
 import gzip
 import argparse
 
-file_1 = "/home/lea/Documents/ALG/Ecoli_100Kb/ecoli_100Kb_reads_40x.fasta"
-'''
+
 def get_options() -> argparse.Namespace:
     
     Give the options you want.
@@ -20,36 +19,30 @@ def get_options() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        "-o1",
+        "-o",
         required=True,
         action="store",
-        help='The output file for kmer.'
+        help='The output file.'
     )
 
     parser.add_argument(
-            "-o2",
-            required=True,
-            action="store",
-            help='The output file for gc_percent.'
-        )
+        "-f",
+        required=False,
+        action="store",
+        default = "kmer",
+        help='The function called.'
+    )
     
     parser.add_argument(
-            "-o3",
-            required=True,
-            action="store",
-            help='The output file for alphabetically.'
-        )
+        "-min",
+        required=False,
+        default = 7,
+        action="store",
+        help='The length of the word for the kmer function.'
+    )
 
 
     return parser.parse_args()
-
-def remove_header(input_file, output_file):
-    with open(input_file, "r") as ifh:
-        with open(output_file, "w") as ofh:
-            for line in ifh:
-                if ">" not in line:
-                    ofh.write(line)'''
-
 
 def kmer(file,min):
     '''
@@ -104,7 +97,6 @@ def gc_percent(file):
                 else :
                      dict_gc[gc].append(line)
     return dict_gc
-
 
 def sort_reads(file):
     '''
@@ -168,18 +160,14 @@ def write_file_alphabetically(input_file, output_name):
         for i in sorted_reads :
             out.write(i)
  
-'''if __name__ == '__main__':
+if __name__ == '__main__':
     options = get_options()
-    write_file_kmer(options.i, options.o1, min)
-    write_file_gc(options.i, options.o2)
-    write_file_alphabetically(options.i, options.o3)
-'''
-    
- 
-write_file_kmer(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_tri.txt", 8)
-#print(kmer(file_1))
-write_file_gc(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_gc.txt")
-write_file_alphabetically(file_1, "/home/lea/Documents/ALG/Ecoli_100Kb/sort_file_al.txt")
+    if options.f == "kmer" :
+        write_file_kmer(options.i, options.o, options.min)
+    elif options.f == "gc" :
+        write_file_gc(options.i, options.o)
+    elif options.f == "alphabet" :
+        write_file_alphabetically(options.i, options.o)
 
 
 
