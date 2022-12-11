@@ -160,7 +160,7 @@ def write_file_alphabetically(input_file, output_name):
  
 if __name__ == '__main__':
     options = get_options()
-    if options.f == "kmer" :
+    if options.f == "minimizer" :
         write_file_minimizer(options.i, options.o, options.min)
     elif options.f == "gc" :
         write_file_gc(options.i, options.o)
