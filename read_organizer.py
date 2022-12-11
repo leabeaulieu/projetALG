@@ -36,6 +36,7 @@ def get_options() -> argparse.Namespace:
         "-min",
         required=False,
         default = 7,
+        type = int,
         action="store",
         help='The length of the word for the minimizer function.'
     )
