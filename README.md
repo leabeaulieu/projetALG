@@ -23,7 +23,7 @@ Optional arguments :
   -f                    Method/function used to generate the output file : "minimizer", "gc" or "alphabet".
                         By default, function "minimizer" is called.
   -min                  Length of smallest lexicographic word wanted for each read if method "minimizer" is used.
-                        By default, min = 7.
+                        By default, min = 8.
 
 ```
 
