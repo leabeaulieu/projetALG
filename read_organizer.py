@@ -1,7 +1,6 @@
 import gzip
 import argparse
 
-
 def get_options() -> argparse.Namespace:
     
     Give the options you want.
@@ -29,7 +28,7 @@ def get_options() -> argparse.Namespace:
         "-f",
         required=False,
         action="store",
-        default = "kmer",
+        default = "minimizer",
         help='The function called.'
     )
     
@@ -38,13 +37,12 @@ def get_options() -> argparse.Namespace:
         required=False,
         default = 7,
         action="store",
-        help='The length of the word for the kmer function.'
+        help='The length of the word for the minimizer function.'
     )
-
 
     return parser.parse_args()
 
-def kmer(file,min):
+def minimizer(file,min):
     '''
     Finds the smallest lexicographic word of length "min" for each read.
     Args:
@@ -116,7 +114,7 @@ def sort_reads(file):
     return sorted_reads
 
 
-def write_file_kmer(input_file, output_name, min):
+def write_file_minimizer(input_file, output_name, min):
     '''
     Write the file that will contains sorted reads by kmers.
 
@@ -125,8 +123,8 @@ def write_file_kmer(input_file, output_name, min):
         output_file : a text file
     '''
     with open (output_name,"w") as out :
-        dico_read = kmer(input_file, min)
-        sorted_dict = {key: value for key, value in sorted(dico_read.items())}
+        dict_read = minimizer(input_file, min)
+        sorted_dict = {key: value for key, value in sorted(dict_read.items())}
         for i in sorted_dict.values():
             for j in i:
                 out.write(j)
@@ -141,8 +139,8 @@ def write_file_gc(input_file, output_name):
         output_file : a text file
     '''
     with open (output_name,"w") as out :
-        dico_gc = gc_percent(input_file)
-        sorted_dict = dict(sorted(dico_gc.items()))
+        dict_gc = gc_percent(input_file)
+        sorted_dict = dict(sorted(dict_gc.items()))
         for i in sorted_dict.values():
             for j in i:
                 out.write(j)
@@ -163,7 +161,7 @@ def write_file_alphabetically(input_file, output_name):
 if __name__ == '__main__':
     options = get_options()
     if options.f == "kmer" :
-        write_file_kmer(options.i, options.o, options.min)
+        write_file_minimizer(options.i, options.o, options.min)
     elif options.f == "gc" :
         write_file_gc(options.i, options.o)
     elif options.f == "alphabet" :
