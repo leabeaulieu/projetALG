@@ -2,14 +2,14 @@ import gzip
 import argparse
 
 def get_options() -> argparse.Namespace:
-    
+    '''
     Give the options you want.
 
     Returns:
         Namespace: The parsed arguments.
-    
+    '''
     parser = argparse.ArgumentParser()
-
+    
     parser.add_argument(
         "-i",
         required=True,
