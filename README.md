@@ -11,7 +11,7 @@ This project is dedicated to reorganize the reads from sequencing so that a gene
 
 ## LAUCH
 
-`python read_organizer.py -i myreads.fa -o myreads_organized.txt -f "kmer" -min 7`
+`python read_organizer.py -i myreads.fa -o myreads_organized.txt -f "minimizer" -min 7`
 
 
 ```
