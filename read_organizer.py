@@ -161,6 +161,8 @@ def write_file_alphabetically(input_file, output_name):
  
 if __name__ == '__main__':
     options = get_options()
+    if options.f not in ["minimizer","gc","alphabet"] :
+        raise ValueError('Option -f must be either "minimizer","gc" or "alphabet".'
     if options.f == "minimizer" :
         write_file_minimizer(options.i, options.o, options.min)
     elif options.f == "gc" :
