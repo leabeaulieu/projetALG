@@ -1,4 +1,4 @@
-import gzip
+
 import argparse
 
 def get_options() -> argparse.Namespace:
